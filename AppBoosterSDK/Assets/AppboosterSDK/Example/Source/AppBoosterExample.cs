@@ -14,8 +14,8 @@ public class AppBoosterExample : MonoBehaviour
 	
 	void Start()
 	{
-		AppBooster.Initialize(_sdkToken, _appId, null, null, true, 
-			new ExperimentValue("buttonColor", "blue"));
+		AppBooster.Initialize(_sdkToken, _appId, null, null, true,
+			true, new ExperimentValue("buttonColor", "blue"));
 
 		if (AppBooster.HasValue("buttonColor"))
 		{
@@ -40,8 +40,6 @@ public class AppBoosterExample : MonoBehaviour
 			{
 				_button.GetComponentInChildren<Text>().text = AppBooster.GetValue("buttonColor");
 			}
-
-			var ex = AppBooster.GetExperimentsWithDetails();
 		}
 		catch (Exception e)
 		{

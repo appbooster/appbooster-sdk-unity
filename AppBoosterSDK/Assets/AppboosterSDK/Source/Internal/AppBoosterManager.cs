@@ -13,6 +13,10 @@ namespace AppboosterSDK.Internal
 	internal class AppBoosterManager
 	{
 		private readonly CredentialsData _credentials;
+		private readonly bool _debugLogs;
+
+		private readonly AsyncWebHelper _client;
+		
 		private ExperimentValue[] _defaults;
 		private Experiment[] _experiments;
 		private List<ExperimentValue> _debugOverride = new List<ExperimentValue>();
@@ -25,7 +29,8 @@ namespace AppboosterSDK.Internal
 
 		public CompositeExperiment[] ExperimentsDebug { get; private set; }
 
-		public AppBoosterManager(string sdkToken, string appId, string deviceId, string appsFlyerId, bool usingShake, ExperimentValue[] defaults)
+		public AppBoosterManager(string sdkToken, string appId, string deviceId, string appsFlyerId, bool usingShake, bool debugLogs,
+			ExperimentValue[] defaults)
 		{
 			if (string.IsNullOrEmpty(sdkToken))
 			{
@@ -48,7 +53,8 @@ namespace AppboosterSDK.Internal
 			}
 
 			_isDebug = LocalStorage.GetBool("debug", false);
-			
+
+			_debugLogs = debugLogs;
 			_defaults = defaults;
 			_experiments = LocalStorage.GetObjects<Experiment>("experiments");
 			ExperimentsDebug = LocalStorage.GetObjects<CompositeExperiment>("experimentsDebug");
@@ -60,6 +66,8 @@ namespace AppboosterSDK.Internal
 			var authToken = JsonWebToken.Encode(authPayload, sdkToken, JwtHashAlgorithm.HS256);
 
 			_credentials = new CredentialsData(appId, deviceId, appsFlyerId, sdkToken, authToken);
+			
+			_client = new AsyncWebHelper(_credentials, _debugLogs);
 
 			var prefab = Resources.Load<AppbosterDebugView>(Constants.DebugPrefabName);
 			if (prefab == null)
@@ -102,7 +110,7 @@ namespace AppboosterSDK.Internal
 		{
 			var knownKeys = string.Join("&", _defaults.Select(x => $"knownKeys[]={x.key}"));
 
-			var result = await AsyncWebHelper.MakeApiRequestAsync(Constants.ExperimentsPath, knownKeys, _credentials, ct);
+			var result = await _client.MakeApiRequestAsync(Constants.ExperimentsPath, knownKeys, ct);
 
 			var data = JsonUtility.FromJson<FetchResult>(result);
 
@@ -119,7 +127,7 @@ namespace AppboosterSDK.Internal
 		{
 			var knownKeys = string.Join("&", _defaults.Select(x => $"knownKeys[]={x.key}"));
 
-			var result = await AsyncWebHelper.MakeApiRequestAsync(Constants.OptionsPath, knownKeys, _credentials, ct);
+			var result = await _client.MakeApiRequestAsync(Constants.OptionsPath, knownKeys, ct);
 		
 			var data = JsonUtility.FromJson<DebugFetchResult>(result);
 
@@ -180,6 +188,11 @@ namespace AppboosterSDK.Internal
 
 			LocalStorage.SetObjects("experimentsDebugOverride", _debugOverride);
 			UpdateMap();
+
+			if (_debugLogs)
+			{
+				Debug.Log($"[Appbooster] SetExperiment {expKey}={experimentOptionValue}");
+			}
 		}
 
 		public void ResetExperiments()
@@ -187,6 +200,11 @@ namespace AppboosterSDK.Internal
 			_debugOverride.Clear();
 			LocalStorage.SetObjects("experimentsDebugOverride", _debugOverride);
 			UpdateMap();
+
+			if (_debugLogs)
+			{
+				Debug.Log($"[Appbooster] ResetExperiments");
+			}
 		}
 		
 	}

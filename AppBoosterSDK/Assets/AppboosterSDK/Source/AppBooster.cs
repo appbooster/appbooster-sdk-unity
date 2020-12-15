@@ -12,9 +12,9 @@ namespace AppboosterSDK
 		private static AppBoosterManager _manager; 
 		
 		public static void Initialize(string sdkToken, string appId, string deviceId = null, string appsFlyerId = null, bool usingShake = true,
-			params ExperimentValue[] defaults)
+			bool debugLogs = false, params ExperimentValue[] defaults)
 		{
-			_manager = new AppBoosterManager(sdkToken, appId, deviceId, appsFlyerId, usingShake, defaults);
+			_manager = new AppBoosterManager(sdkToken, appId, deviceId, appsFlyerId, usingShake, debugLogs, defaults);
 		}
 
 		public static Task FetchAsync(CancellationToken ct = default)
