@@ -1,6 +1,5 @@
 ﻿using System;
 using AppboosterSDK;
-using AppboosterSDK.Types;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,12 +9,18 @@ public class AppBoosterExample : MonoBehaviour
 	[SerializeField] private string _sdkToken = "Insert you SDK token here!";
 	[SerializeField] private string _appId = "Insert you AppId here!";
 
-	[Space, SerializeField] private Button _button; 
-	
+	[Space, SerializeField] private Button _button;
+
 	void Start()
 	{
-		AppBooster.Initialize(_sdkToken, _appId, null, null, true,
-			true, new ExperimentValue("buttonColor", "blue"));
+		AppBooster.Initialize(sdkToken: _sdkToken,
+			appId: _appId,
+			usingShake: true,
+			debugLogs: true,
+			defaults: new[]
+			{
+				("buttonColor", "blue")
+			});
 
 		if (AppBooster.HasValue("buttonColor"))
 		{
@@ -35,7 +40,7 @@ public class AppBoosterExample : MonoBehaviour
 		try
 		{
 			await AppBooster.FetchAsync();
-			
+
 			if (AppBooster.HasValue("buttonColor"))
 			{
 				_button.GetComponentInChildren<Text>().text = AppBooster.GetValue("buttonColor");

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AppboosterSDK.Exceptions;
@@ -12,9 +13,10 @@ namespace AppboosterSDK
 		private static AppBoosterManager _manager; 
 		
 		public static void Initialize(string sdkToken, string appId, string deviceId = null, string appsFlyerId = null, bool usingShake = true,
-			bool debugLogs = false, params ExperimentValue[] defaults)
+			bool debugLogs = false, (string key, string value)[] defaults = null)
 		{
-			_manager = new AppBoosterManager(sdkToken, appId, deviceId, appsFlyerId, usingShake, debugLogs, defaults);
+			_manager = new AppBoosterManager(sdkToken, appId, deviceId, appsFlyerId, usingShake, debugLogs, 
+				defaults?.Select(x => new ExperimentValue(x.key, x.value)).ToArray() ?? new ExperimentValue[0]);
 		}
 
 		public static Task FetchAsync(CancellationToken ct = default)
