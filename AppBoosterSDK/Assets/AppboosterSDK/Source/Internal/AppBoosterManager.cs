@@ -12,16 +12,15 @@ namespace AppboosterSDK.Internal
 {
 	internal class AppBoosterManager
 	{
-		private readonly CredentialsData _credentials;
 		private readonly bool _debugLogs;
 
 		private readonly AsyncWebHelper _client;
 		
-		private ExperimentValue[] _defaults;
+		private readonly ExperimentValue[] _defaults;
 		private Experiment[] _experiments;
-		private List<ExperimentValue> _debugOverride = new List<ExperimentValue>();
-		private Dictionary<string, string> _experimentMap = new Dictionary<string, string>(16, StringComparer.InvariantCultureIgnoreCase);
-		private Dictionary<string, string> _optionIdMap = new Dictionary<string, string>(16, StringComparer.InvariantCultureIgnoreCase);
+		private readonly List<ExperimentValue> _debugOverride;
+		private readonly Dictionary<string, string> _experimentMap = new Dictionary<string, string>(16, StringComparer.InvariantCultureIgnoreCase);
+		private readonly Dictionary<string, string> _optionIdMap = new Dictionary<string, string>(16, StringComparer.InvariantCultureIgnoreCase);
 
 		private readonly AppbosterDebugView _debugView;
 
@@ -29,8 +28,8 @@ namespace AppboosterSDK.Internal
 
 		public CompositeExperiment[] ExperimentsDebug { get; private set; }
 
-		public AppBoosterManager(string sdkToken, string appId, string deviceId, string appsFlyerId, bool usingShake, bool debugLogs,
-			ExperimentValue[] defaults)
+		public AppBoosterManager(string sdkToken, string appId, string deviceId, string appsFlyerId, string amplitudeUserId, 
+			bool usingShake, bool debugLogs, ExperimentValue[] defaults)
 		{
 			if (string.IsNullOrEmpty(sdkToken))
 			{
@@ -62,12 +61,12 @@ namespace AppboosterSDK.Internal
 			
 			UpdateMap();
 			
-			var authPayload = $"{{\"deviceId\": \"{deviceId}\",\"appsFlyerId\":\"{appsFlyerId}\"}}";
+			var authPayload = $"{{\"deviceId\": \"{deviceId}\",\"appsFlyerId\":\"{appsFlyerId}\",\"amplitudeUserId\":\"{amplitudeUserId}\"}}";
 			var authToken = JsonWebToken.Encode(authPayload, sdkToken, JwtHashAlgorithm.HS256);
 
-			_credentials = new CredentialsData(appId, deviceId, appsFlyerId, sdkToken, authToken);
+			var credentials = new CredentialsData(appId, deviceId, appsFlyerId, sdkToken, authToken);
 			
-			_client = new AsyncWebHelper(_credentials, _debugLogs);
+			_client = new AsyncWebHelper(credentials, _debugLogs);
 
 			var prefab = Resources.Load<AppbosterDebugView>(Constants.DebugPrefabName);
 			if (prefab == null)
