@@ -20,7 +20,12 @@ public class AppBoosterExample : MonoBehaviour
 			defaults: new[]
 			{
 				("buttonColor", "blue")
-			});
+			},
+			deviceProperties: new[]
+			{
+				("installedAt", DateTime.Now.ToString()),
+			}
+			);
 
 		if (AppBooster.HasValue("buttonColor"))
 		{

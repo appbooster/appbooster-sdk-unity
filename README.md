@@ -28,7 +28,12 @@ AppBooster.Initialize(
     {
         ("${TEST_1_KEY}", "${TEST_1_DEFAULT_VALUE}"),
 	    ("${TEST_2_KEY}", "${TEST_2_DEFAULT_VALUE}")
-    });
+    }),
+    deviceProperties: new [] 
+    {
+        ("${TEST_1_KEY}", "${TEST_1_DEFAULT_VALUE}"),
+        ("${TEST_2_KEY}", "${TEST_2_DEFAULT_VALUE}")
+    });;
 ```
 
 ### How to fetch known test values that associated with your device?

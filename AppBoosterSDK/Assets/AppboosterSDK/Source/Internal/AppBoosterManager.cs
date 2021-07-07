@@ -29,7 +29,7 @@ namespace AppboosterSDK.Internal
 		public CompositeExperiment[] ExperimentsDebug { get; private set; }
 
 		public AppBoosterManager(string sdkToken, string appId, string deviceId, string appsFlyerId, string amplitudeUserId, 
-			bool usingShake, bool debugLogs, ExperimentValue[] defaults)
+			bool usingShake, bool debugLogs, ExperimentValue[] defaults, ExperimentValue[] deviceProperties)
 		{
 			if (string.IsNullOrEmpty(sdkToken))
 			{
@@ -61,8 +61,24 @@ namespace AppboosterSDK.Internal
 			
 			UpdateMap();
 			
-			var authPayload = $"{{\"deviceId\": \"{deviceId}\",\"appsFlyerId\":\"{appsFlyerId}\",\"amplitudeUserId\":\"{amplitudeUserId}\"}}";
-			var authToken = JsonWebToken.Encode(authPayload, sdkToken, JwtHashAlgorithm.HS256);
+			var authPayload = $"{{\"deviceId\": \"{deviceId}\",\"appsFlyerId\":\"{appsFlyerId}\",\"amplitudeUserId\":\"{amplitudeUserId}\"";
+
+			if (deviceProperties.Length > 0)
+            {
+				authPayload += $",\"deviceProperties\": {{";
+				for (int i = 0; i < deviceProperties.Length; i++)
+                {
+					var props = deviceProperties[i];
+					authPayload += $"\"{props.key}\": \"{props.value}\"";
+
+					if ( i != deviceProperties.Length - 1 )
+						authPayload += ",";
+                }
+				authPayload += "}";
+			}
+			authPayload += "}";
+
+			var authToken = JsonWebToken.Encode( authPayload, sdkToken, JwtHashAlgorithm.HS256 );
 
 			var credentials = new CredentialsData(appId, deviceId, appsFlyerId, sdkToken, authToken);
 			
