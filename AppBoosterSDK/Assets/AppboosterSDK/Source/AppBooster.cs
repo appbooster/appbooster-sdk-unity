@@ -13,9 +13,9 @@ namespace AppboosterSDK
 		private static AppBoosterManager _manager; 
 		
 		public static void Initialize(string sdkToken, string appId, string deviceId = null, string appsFlyerId = null, bool usingShake = true,
-			string amplitudeUserId = null, bool debugLogs = false, (string key, string value)[] defaults = null, (string key, string value)[] deviceProperties = null)
+			string amplitudeId = null, bool debugLogs = false, (string key, string value)[] defaults = null, (string key, string value)[] deviceProperties = null)
 		{
-			_manager = new AppBoosterManager(sdkToken, appId, deviceId, appsFlyerId, amplitudeUserId, usingShake, debugLogs, 
+			_manager = new AppBoosterManager(sdkToken, appId, deviceId, appsFlyerId, amplitudeId, usingShake, debugLogs, 
 				defaults?.Select(x => new ExperimentValue(x.key, x.value)).ToArray() ?? new ExperimentValue[0],
 				deviceProperties?.Select(x => new ExperimentValue(x.key, x.value)).ToArray() ?? new ExperimentValue[0]);
 		}

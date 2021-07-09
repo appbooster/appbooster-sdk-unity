@@ -28,7 +28,7 @@ namespace AppboosterSDK.Internal
 
 		public CompositeExperiment[] ExperimentsDebug { get; private set; }
 
-		public AppBoosterManager(string sdkToken, string appId, string deviceId, string appsFlyerId, string amplitudeUserId, 
+		public AppBoosterManager(string sdkToken, string appId, string deviceId, string appsFlyerId, string amplitudeId, 
 			bool usingShake, bool debugLogs, ExperimentValue[] defaults, ExperimentValue[] deviceProperties)
 		{
 			if (string.IsNullOrEmpty(sdkToken))
@@ -61,7 +61,7 @@ namespace AppboosterSDK.Internal
 			
 			UpdateMap();
 			
-			var authPayload = $"{{\"deviceId\": \"{deviceId}\",\"appsFlyerId\":\"{appsFlyerId}\",\"amplitudeUserId\":\"{amplitudeUserId}\"";
+			var authPayload = $"{{\"deviceId\": \"{deviceId}\",\"appsFlyerId\":\"{appsFlyerId}\",\"amplitudeId\":\"{amplitudeId}\"";
 
 			if (deviceProperties.Length > 0)
             {
