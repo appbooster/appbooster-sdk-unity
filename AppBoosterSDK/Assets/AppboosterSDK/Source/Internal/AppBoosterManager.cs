@@ -61,7 +61,7 @@ namespace AppboosterSDK.Internal
 			
 			UpdateMap();
 			
-			var authPayload = $"{{\"deviceId\": \"{deviceId}\",\"appsFlyerId\":\"{appsFlyerId}\",\"amplitudeUserId\":\"{amplitudeUserId}\"";
+			var authPayload = $"{{\"deviceId\": \"{deviceId}\",\"appsFlyerId\":\"{appsFlyerId}\",\"amplitudeId\":\"{amplitudeUserId}\"";
 
 			if (deviceProperties.Length > 0)
             {
@@ -134,6 +134,7 @@ namespace AppboosterSDK.Internal
 
 			_experiments = data.experiments ?? new Experiment[0];
 			LocalStorage.SetObjects("experiments", _experiments);
+			UpdateMap();
 
 			await FetchDebugAsync(ct);
 		}
