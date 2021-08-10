@@ -61,7 +61,7 @@ namespace AppboosterSDK.Internal
 			
 			UpdateMap();
 			
-			var authPayload = $"{{\"deviceId\": \"{deviceId}\",\"appsFlyerId\":\"{appsFlyerId}\",\"amplitudeUserId\":\"{amplitudeUserId}\"";
+			var authPayload = $"{{\"deviceId\": \"{deviceId}\",\"appsFlyerId\":\"{appsFlyerId}\",\"amplitudeId\":\"{amplitudeUserId}\"";
 
 			if (deviceProperties.Length > 0)
             {
