@@ -134,6 +134,7 @@ namespace AppboosterSDK.Internal
 
 			_experiments = data.experiments ?? new Experiment[0];
 			LocalStorage.SetObjects("experiments", _experiments);
+			UpdateMap();
 
 			await FetchDebugAsync(ct);
 		}
