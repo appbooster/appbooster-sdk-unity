@@ -136,7 +136,8 @@ namespace AppboosterSDK.Internal
 			LocalStorage.SetObjects("experiments", _experiments);
 			UpdateMap();
 
-			await FetchDebugAsync(ct);
+			if (_isDebug)
+				await FetchDebugAsync(ct);
 		}
 
 		public async Task FetchDebugAsync(CancellationToken ct = default)
